@@ -4,7 +4,9 @@
 ![system_requirement_Lab1 jpg](https://github.com/TranMinhDuc2001/EDABK_EE319K/assets/119594103/d525763b-f0c0-41aa-94b5-4a17844d45b6)
 ## Solution
 - K_Map Lab1 <br>
-![K_Map_Lab1](https://github.com/TranMinhDuc2001/EDABK_EE319K/assets/119594103/9a884e12-e05e-4c4d-b49d-c5fd5640e648)
+![K_Map_Lab1](https://github.com/TranMinhDuc2001/EDABK_EE319K/assets/119594103/e33b4aaf-017d-4361-ba18-7e52d85ca04b)
+
+
 
 # Lab2: Introduction to C
 ## System Requirement <br>
