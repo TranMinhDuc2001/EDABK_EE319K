@@ -1,0 +1,281 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;****************** main.s ***************
+    2 00000000         ; Program initially written by: Yerraballi and Valvano
+    3 00000000         ; Author: Place your name here
+    4 00000000         ; Date Created: 1/15/2018 
+    5 00000000         ; Last Modified: 12/30/2022 
+    6 00000000         ; Brief description of the program: Solution to Lab1
+    7 00000000         ; The objective of this system is to implement a parity 
+                       system
+    8 00000000         ; Hardware connections: 
+    9 00000000         ;  One output is positive logic, 1 turns on the LED, 0 t
+                       urns off the LED
+   10 00000000         ;  Three inputs are positive logic, meaning switch not p
+                       ressed is 0, pressed is 1
+   11 00000000 400073FC 
+                       GPIO_PORTD_DATA_R
+                               EQU              0x400073FC
+   12 00000000 40007400 
+                       GPIO_PORTD_DIR_R
+                               EQU              0x40007400
+   13 00000000 4000751C 
+                       GPIO_PORTD_DEN_R
+                               EQU              0x4000751C
+   14 00000000 400243FC 
+                       GPIO_PORTE_DATA_R
+                               EQU              0x400243FC
+   15 00000000 40024400 
+                       GPIO_PORTE_DIR_R
+                               EQU              0x40024400
+   16 00000000 4002451C 
+                       GPIO_PORTE_DEN_R
+                               EQU              0x4002451C
+   17 00000000 400FE608 
+                       SYSCTL_RCGCGPIO_R
+                               EQU              0x400FE608
+   18 00000000                 PRESERVE8
+   19 00000000                 AREA             Data, ALIGN=2
+   20 00000000         ; Declare global variables here if needed
+   21 00000000         ; with the SPACE assembly directive
+   22 00000000                 ALIGN            4
+   23 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+2
+   24 00000000                 THUMB
+   25 00000000                 EXPORT           EID
+   26 00000000 32 30 32 
+              30 33 33 
+              37 30 00 EID     DCB              "20203370",0 ;replace ABC123 wi
+                                                            th your EID
+   27 00000009                 EXPORT           RunGrader
+   28 00000009 00 00 00        ALIGN            4
+   29 0000000C 00000001 
+                       RunGrader
+                               DCD              1           ; change to nonzero
+                                                             when ready for gra
+                                                            ding
+   30 00000010         
+   31 00000010                 EXPORT           Lab1
+   32 00000010         ;DOC KI HUONG DAN LAB1
+   33 00000010         ;Tham khao cac muc 1.7.3 ebook de su dung MOV: max 16-bi
+                       t va LDR: max 32-bit , STRB
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   34 00000010         ;Tham khao cac muc 1.7.3 ebook su dung EOR
+   35 00000010         Lab1
+   36 00000010         ; Khoi tao 
+   37 00000010 4810            LDR              R0, =SYSCTL_RCGCGPIO_R ; Nap di
+                                                            a chi tu bo nho vao
+                                                             thanh ghi R0
+   38 00000012 F04F 0110       MOV              R1, #0x10   ; luu vao R1 gia tr
+                                                            i la 0x10 la bat cl
+                                                            ock portE
+   39 00000016 6001            STR              R1, [R0]    ; luu giá tri cua R
+                                                            1 vào R0 
+   40 00000018         
+   41 00000018 480F            LDR              R0, =GPIO_PORTE_DIR_R ; Nap dia
+                                                             chi thanh ghi huon
+                                                            g i/o vao thanh ghi
+                                                             R0 
+   42 0000001A F04F 0120       MOV              R1, #0x20   ; lua chon cac chan
+                                                             PE0,1,2 là input c
+                                                            hân PE5 là output 
+   43 0000001E 6001            STR              R1, [R0]    ; luu gia tri cua R
+                                                            1 vao R0
+   44 00000020         
+   45 00000020         
+   46 00000020 480E            LDR              R0, =GPIO_PORTE_DEN_R ; Nap dia
+                                                             chi <thanh ghi du 
+                                                            lieu> vao thanh ghi
+                                                             R0
+   47 00000022 F04F 0127       MOV              R1, #0x27   ; lua chon cac chan
+                                                             PD0,1,2,5 la cac c
+                                                            han truyen nhan du 
+                                                            lieu 
+   48 00000026 6001            STR              R1, [R0]    ; luu cac gia cua R
+                                                            1 vao R0
+   49 00000028         
+   50 00000028 480D            LDR              R0, =GPIO_PORTE_DATA_R ; Nap di
+                                                            a chi GPIO_PORTD_DA
+                                                            TA_R vao R0
+   51 0000002A         loop
+   52 0000002A         ;Bat dau vong lap
+   53 0000002A 6801            LDR              R1, [R0]
+   54 0000002C F001 0101       AND              R1,R1,#0x01 ;Dich phai 0 bit de
+                                                             luu vao PE0
+   55 00000030         
+   56 00000030 6802            LDR              R2, [R0]
+   57 00000032 F002 0202       AND              R2,R2,#0x02
+   58 00000036 EA4F 0252       LSR              R2,R2,#0x01 ;Dich phai 1 bit de
+                                                             luu vao PE1
+   59 0000003A         
+   60 0000003A 6803            LDR              R3, [R0]
+   61 0000003C F003 0304       AND              R3,R3,#0x04
+   62 00000040 EA4F 0393       LSR              R3,R3,#0x02 ;Dich phai 2 bit de
+                                                             luu vao PE2
+   63 00000044         
+   64 00000044         ;Thuc hien XOR
+   65 00000044 EA81 0402       EOR              R4, R1, R2
+   66 00000048 EA84 0403       EOR              R4, R4, R3
+   67 0000004C         
+   68 0000004C         ;Thuc hien luu vao PE5
+   69 0000004C EA4F 1444       LSL              R4,R4,#0x05 ;Dich trai 5 bit de
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+                                                             luu vao PE5 
+   70 00000050 6004            STR              R4,[R0]
+   71 00000052         
+   72 00000052 E7EA            B                loop        ; lap lai vong lap
+   73 00000054         
+   74 00000054                 ALIGN                        ; Dam bao cuoi phan
+                                                             nay duoc can chinh
+                                                            
+   75 00000054                 END                          ; Ket thuc
+              400FE608 
+              40024400 
+              4002451C 
+              400243FC 
+Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4 --fpu=
+SoftVFP --depend=.\lab1.d -o.\lab1.o -I.\RTE\_Lab1 -IC:\Users\ductm\AppData\Loc
+al\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include -IC:\Users\ductm\AppData\Local\
+Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL SETA 1
+" --predefine="__UVISION_VERSION SETA 538" --predefine="_RTE_ SETA 1" --predefi
+ne="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 1" --list=.\lab1.lst Lab1.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Data 00000000
+
+Symbol: Data
+   Definitions
+      At line 19 in file Lab1.s
+   Uses
+      None
+Comment: Data unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 23 in file Lab1.s
+   Uses
+      None
+Comment: .text unused
+EID 00000000
+
+Symbol: EID
+   Definitions
+      At line 26 in file Lab1.s
+   Uses
+      At line 25 in file Lab1.s
+Comment: EID used once
+Lab1 00000010
+
+Symbol: Lab1
+   Definitions
+      At line 35 in file Lab1.s
+   Uses
+      At line 31 in file Lab1.s
+Comment: Lab1 used once
+RunGrader 0000000C
+
+Symbol: RunGrader
+   Definitions
+      At line 29 in file Lab1.s
+   Uses
+      At line 27 in file Lab1.s
+Comment: RunGrader used once
+loop 0000002A
+
+Symbol: loop
+   Definitions
+      At line 51 in file Lab1.s
+   Uses
+      At line 72 in file Lab1.s
+Comment: loop used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIO_PORTD_DATA_R 400073FC
+
+Symbol: GPIO_PORTD_DATA_R
+   Definitions
+      At line 11 in file Lab1.s
+   Uses
+      None
+Comment: GPIO_PORTD_DATA_R unused
+GPIO_PORTD_DEN_R 4000751C
+
+Symbol: GPIO_PORTD_DEN_R
+   Definitions
+      At line 13 in file Lab1.s
+   Uses
+      None
+Comment: GPIO_PORTD_DEN_R unused
+GPIO_PORTD_DIR_R 40007400
+
+Symbol: GPIO_PORTD_DIR_R
+   Definitions
+      At line 12 in file Lab1.s
+   Uses
+      None
+Comment: GPIO_PORTD_DIR_R unused
+GPIO_PORTE_DATA_R 400243FC
+
+Symbol: GPIO_PORTE_DATA_R
+   Definitions
+      At line 14 in file Lab1.s
+   Uses
+      At line 50 in file Lab1.s
+Comment: GPIO_PORTE_DATA_R used once
+GPIO_PORTE_DEN_R 4002451C
+
+Symbol: GPIO_PORTE_DEN_R
+   Definitions
+      At line 16 in file Lab1.s
+   Uses
+      At line 46 in file Lab1.s
+Comment: GPIO_PORTE_DEN_R used once
+GPIO_PORTE_DIR_R 40024400
+
+Symbol: GPIO_PORTE_DIR_R
+   Definitions
+      At line 15 in file Lab1.s
+   Uses
+      At line 41 in file Lab1.s
+Comment: GPIO_PORTE_DIR_R used once
+SYSCTL_RCGCGPIO_R 400FE608
+
+Symbol: SYSCTL_RCGCGPIO_R
+   Definitions
+      At line 17 in file Lab1.s
+   Uses
+      At line 37 in file Lab1.s
+Comment: SYSCTL_RCGCGPIO_R used once
+7 symbols
+349 symbols in table
