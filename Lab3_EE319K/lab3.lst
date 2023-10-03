@@ -1,0 +1,828 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;****************** Lab3.s ***************
+    2 00000000         ; Program written by: Put your names here
+    3 00000000         ; Date Created: 2/4/2017
+    4 00000000         ; Last Modified: 1/4/2023
+    5 00000000         ; Brief description of the program
+    6 00000000         ;   The LED toggles at 2 Hz and a varying duty-cycle
+    7 00000000         ; Hardware connections (External: Two buttons and one LE
+                       D)
+    8 00000000         ;  Change is Button input  (1 means pressed, 0 means not
+                        pressed)
+    9 00000000         ;  Breathe is Button input  (1 means pressed, 0 means no
+                       t pressed)
+   10 00000000         ;  LED is an output (1 activates external LED)
+   11 00000000         ; Overall functionality of this system is to operate lik
+                       e this
+   12 00000000         ;   1) Make LED an output and make Change and Breathe in
+                       puts.
+   13 00000000         ;   2) The system starts with the the LED toggling at 2H
+                       z,
+   14 00000000         ;      which is 2 times per second with a duty-cycle of 
+                       30%.
+   15 00000000         ;      Therefore, the LED is ON for 150ms and off for 35
+                       0 ms.
+   16 00000000         ;   3) When the Change button is pressed-and-released in
+                       crease
+   17 00000000         ;      the duty cycle by 20% (modulo 100%). Therefore fo
+                       r each
+   18 00000000         ;      press-and-release the duty cycle changes from 30%
+                        to 70% to 70%
+   19 00000000         ;      to 90% to 10% to 30% so on
+   20 00000000         ;   4) Implement a "breathing LED" when Breathe Switch i
+                       s pressed:
+   21 00000000         ; PortE device registers
+   22 00000000 400243FC 
+                       GPIO_PORTE_DATA_R
+                               EQU              0x400243FC
+   23 00000000 40024400 
+                       GPIO_PORTE_DIR_R
+                               EQU              0x40024400
+   24 00000000 4002451C 
+                       GPIO_PORTE_DEN_R
+                               EQU              0x4002451C
+   25 00000000 400FE608 
+                       SYSCTL_RCGCGPIO_R
+                               EQU              0x400FE608
+   26 00000000         
+   27 00000000                 IMPORT           TExaS_Init
+   28 00000000                 THUMB
+   29 00000000                 AREA             DATA, ALIGN=2
+   30 00000000         ;global variables go here
+   31 00000000         
+   32 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+3
+   33 00000000                 THUMB
+   34 00000000                 EXPORT           EID1
+   35 00000000 32 30 32 
+              30 33 33 
+              37 30 00 EID1    DCB              "20203370",0 ;replace ABC123 wi
+                                                            th your EID
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   36 00000009                 EXPORT           EID2
+   37 00000009 32 30 32 
+              30 33 33 
+              37 30 00 EID2    DCB              "20203370",0 ;replace ABC123 wi
+                                                            th your EID
+   38 00000012 00 00           ALIGN            4
+   39 00000014         
+   40 00000014                 EXPORT           Start
+   41 00000014         
+   42 00000014         
+   43 00000014         Start
+   44 00000014         ; TExaS_Init sets bus clock at 80 MHz, interrupts, ADC1,
+                        TIMER3, TIMER5, and UART0
+   45 00000014 F04F 0002       MOV              R0,#2       ;0 for TExaS oscill
+                                                            oscope, 1 for PORTE
+                                                             logic analyzer, 2 
+                                                            for Lab3 grader, 3 
+                                                            for none
+   46 00000018 F7FF FFFE       BL               TExaS_Init  ;enables interrupts
+                                                            , prints the pin se
+                                                            lections based on E
+                                                            ID1 EID2
+   47 0000001C         ; Your Initialization goes here
+   48 0000001C         
+   49 0000001C 48F8            LDR              R0, =SYSCTL_RCGCGPIO_R ;nap dia
+                                                             chi xung vao R0
+   50 0000001E F04F 0110       MOV              R1, #0x10   ;bat xung clock por
+                                                            tE
+   51 00000022 6001            STR              R1,[R0]     ;luu gia tri R0 vao
+                                                             R1
+   52 00000024         
+   53 00000024 48F7            LDR              R0, =GPIO_PORTE_DIR_R ;nap dia 
+                                                            chi thanh ghi dinh 
+                                                            huong I/O vao R0
+   54 00000026 F04F 0110       MOV              R1, #0x10   ;PE0,PE2 input, PE4
+                                                             output
+   55 0000002A 6001            STR              R1,[R0]
+   56 0000002C         
+   57 0000002C 48F6            LDR              R0, =GPIO_PORTE_DEN_R ;nap dia 
+                                                            chi thanh ghi du li
+                                                            eu vao R0
+   58 0000002E F04F 0115       MOV              R1, #0x15   ;PE0,PE2,PE4 la cac
+                                                             chan du lieu 
+   59 00000032 6001            STR              R1,[R0]
+   60 00000034         
+   61 00000034 48F5            LDR              R0, =GPIO_PORTE_DATA_R ;nap dia
+                                                             chi thanh ghi data
+                                                             gpio vao R0
+   62 00000036         
+   63 00000036 F04F 070A       MOV              R7,#10
+   64 0000003A F04F 0801       MOV              R8,#1
+   65 0000003E F04F 0B0A       MOV              R11,#10
+   66 00000042         loop                                 ; main engine goes 
+                                                            here
+   67 00000042 6802            LDR              R2,[R0]
+   68 00000044 F002 0201       AND              R2,R2,#0x01
+   69 00000048         
+   70 00000048 F8D0 9000       LDR              R9,[R0]
+   71 0000004C F009 0904       AND              R9,R9,#0x04
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   72 00000050         
+   73 00000050 2A01            CMP              R2,#0x01
+   74 00000052 D137            BNE              Togle_Led
+   75 00000054 D050            BEQ              Wait_TL
+   76 00000056         
+   77 00000056 F1B9 0F04       CMP              R9,#0x04
+   78 0000005A D000            BEQ              Breath_Led
+   79 0000005C         
+   80 0000005C E7F1            B                loop
+   81 0000005E         
+   82 0000005E         Breath_Led                           ;
+   83 0000005E B478            PUSH{R3,R4,R5,R6}
+   84 00000060 F44F 767A       MOV              R6,#1000
+   85 00000064 6803            LDR              R3,[R0]
+   86 00000066 F043 0310       ORR              R3,R3,#0x10 ; ghi R3 o muc cao 
+                                                            -> den sang
+   87 0000006A 6003            STR              R3,[R0]
+   88 0000006C 463D            MOV              R5,R7       ;R7 = 10,30,50,70,9
+                                                            0
+   89 0000006E FB05 F406       MUL              R4,R5,R6    ; tao ra R4 de dua 
+                                                            vao ham delay
+   90 00000072 F000 F859       BL               Delay
+   91 00000076 F023 0310       BIC              R3,R3,#0x10 ; ghi R3 o muc thap
+                                                             -> den tat
+   92 0000007A 6003            STR              R3,[R0]
+   93 0000007C F1C5 0564       RSB              R5,R5,#100  ;R5 = 100 - R5
+   94 00000080 FB05 F406       MUL              R4,R5,R6
+   95 00000084 F000 F850       BL               Delay
+   96 00000088 BC78            POP{R6,R5,R4,R3}
+   97 0000008A F10A 0A01       ADD              R10,R10,#1
+   98 0000008E F1BA 0F0A       CMP              R10,#10     ; cho xung chay 10 
+                                                            lay neu vuot qua 10
+                                                             thi sang xung khac
+                                                            
+   99 00000092 D000            BEQ              Func_BL
+  100 00000094 E7D5            B                loop
+  101 00000096         
+  102 00000096         Func_BL                              ; tinh toan R7 = |x
+                                                            | voi x = -90,-70,.
+                                                            ..,90
+  103 00000096 F04F 0A00       MOV              R10,#0
+  104 0000009A F10B 0B14       ADD              R11,R11,#20
+  105 0000009E F1BB 0F00       CMP              R11,#0
+  106 000000A2 DB05            BLT              abs
+  107 000000A4 465F            MOV              R7,R11
+  108 000000A6 F1BB 0F5A       CMP              R11,#90     ; neu x = 90 thi se
+                                                            t lai x = -90
+  109 000000AA D008            BEQ              Init_BL
+  110 000000AC         
+  111 000000AC         
+  112 000000AC F7FF FFD7       BL               Breath_Led
+  113 000000B0         
+  114 000000B0         abs
+  115 000000B0 B440            PUSH{R6}
+  116 000000B2 465E            MOV              R6,R11
+  117 000000B4 F1C6 0600       NEG              R6,R6
+  118 000000B8 4637            MOV              R7,R6
+  119 000000BA BC40            POP{R6}
+  120 000000BC E7CF            B                Breath_Led
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  121 000000BE         
+  122 000000BE         Init_BL
+  123 000000BE F06F 0B59       MOV              R11,#0xFFFFFFA6 
+                                                            ; xet lai R11 = -90
+                                                            
+  124 000000C2 E7BE            B                loop
+  125 000000C4         
+  126 000000C4         Togle_Led
+  127 000000C4 B478            PUSH{R3,R4,R5,R6}
+  128 000000C6 F24C 3650       MOV              R6,#50000
+  129 000000CA 6803            LDR              R3,[R0]
+  130 000000CC F043 0310       ORR              R3,R3,#0x10
+  131 000000D0 6003            STR              R3,[R0]
+  132 000000D2 463D            MOV              R5,R7       ;R7 = 10,30,50,70,9
+                                                            0
+  133 000000D4 FB05 F406       MUL              R4,R5,R6
+  134 000000D8 F000 F826       BL               Delay
+  135 000000DC F023 0310       BIC              R3,R3,#0x10
+  136 000000E0 6003            STR              R3,[R0]
+  137 000000E2 F1C5 0564       RSB              R5,R5,#100  ;R5 = 100 - R5
+  138 000000E6 FB05 F406       MUL              R4,R5,R6
+  139 000000EA F000 F81D       BL               Delay
+  140 000000EE BC78            POP{R6,R5,R4,R3}
+  141 000000F0 F04F 0801       MOV              R8,#1
+  142 000000F4 F7FF FFA5       BL               loop
+  143 000000F8         
+  144 000000F8         Wait_TL
+  145 000000F8 F1B8 0F01       CMP              R8,#1       ; tang bien R7 1 la
+                                                            n trong ca qua trin
+                                                            h wait
+  146 000000FC D009            BEQ              Increase_TL
+  147 000000FE B408            PUSH{R3}
+  148 00000100 6803            LDR              R3,[R0]
+  149 00000102 F043 0310       ORR              R3,R3,#0x10
+  150 00000106 6003            STR              R3,[R0]
+  151 00000108 BC08            POP{R3}
+  152 0000010A         
+  153 0000010A F1B9 0F04       CMP              R9,#0x04
+  154 0000010E D0A6            BEQ              Breath_Led
+  155 00000110         
+  156 00000110 E797            B                loop
+  157 00000112         
+  158 00000112         Increase_TL
+  159 00000112 F04F 0800       MOV              R8,#0
+  160 00000116 F107 0714       ADD              R7,R7,#20
+  161 0000011A 2F64            CMP              R7,#100
+  162 0000011C DC01            BGT              Init        ; khi R7 = 90 thi s
+                                                            et lai R7 = 10
+  163 0000011E F7FF FFEB       BL               Wait_TL
+  164 00000122         
+  165 00000122         Init
+  166 00000122 F04F 070A       MOV              R7,#10
+  167 00000126 E7E7            B                Wait_TL
+  168 00000128         
+  169 00000128         
+  170 00000128                 ALIGN            8
+  171 00000128         Delay                                ; wait 100ns*R0
+  172 00000128 BF00            NOP
+  173 0000012A BF00            NOP
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  174 0000012C BF00            NOP
+  175 0000012E BF00            NOP
+  176 00000130 1E64            SUBS             R4,R4,#0x01
+  177 00000132 D1F9            BNE              Delay
+  178 00000134 4770            BX               LR
+  179 00000136         
+  180 00000136         ; 256 points with values from 100 to 9900      
+  181 00000136         PerlinTable
+  182 00000136 F8 16 51 
+              18 E1 14 
+              00 0E D9 
+              0D A2 02 
+              FB 13 56 
+              02 73 1E 
+              99 0E BF 
+              0E 51 08 
+              67 1D 3C 
+              23 70 01 
+              09 22 53 
+              15 C6 05 
+              CB 0F E0 
+              04 B5 0A 
+              A0 15 96 
+              01               DCW              5880,6225,5345,3584,3545,674,51
+15,598,7795,3737,3775,2129,7527,9020,368,8713,5459,1478,4043,1248,2741,5536,406
+  183 00000164 32 0F EC 
+              05 48 24 
+              88 03 E3 
+              01 D4 03 
+              CD 1C 4A 
+              01 86 16 
+              53 25 56 
+              12 62 23 
+              9B 0B 64 
+              00 47 04 
+              D9 1D A9 
+              09 72 0E 
+              13 26 24 
+              21 BF 1E 
+              E3 11 A0 
+              05               DCW              3890,1516,9288,904,483,980,7373
+,330,5766,9555,4694,9058,2971,100,1095,7641,2473,3698,9747,8484,7871,4579,1440
+  184 00000192 09 02 2D 
+              05 EA 08 
+              DC 1A 53 
+              05 8D 0D 
+              D5 23 AC 
+              16 C4 08 
+              66 0D 69 
+              1A 62 03 
+              15 13 BA 
+              14 F6 19 
+              83 19 8F 
+              0A 8F 1A 
+              75 0B 10 
+              19 02 0B 
+              6E 14 2D 
+              15               DCW              521,1325,2282,6876,1363,3469,91
+73,5804,2244,3430,6761,866,4885,5306,6646,6531,2703,6799,2933,6416,2818,5230,54
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+21
+  185 000001C0 92 07 6E 
+              04 37 19 
+              E8 0B 39 
+              16 04 18 
+              EF 22 CD 
+              0C FD 10 
+              A2 22 A2 
+              12 5D 09 
+              F1 1F 47 
+              14 C9 22 
+              4A 21 18 
+              10 26 0E 
+              86 06 9D 
+              08 45 07 
+              07 25            DCW              1938,1134,6455,3048,5689,6148,8
+943,3277,4349,8866,4770,2397,8177,5191,8905,8522,4120,3622,1670,2205,1861,9479
+  186 000001EC 5F 06 E1 
+              24 A5 0F 
+              C6 15 77 
+              08 1C 0A 
+              21 04 D0 
+              09 77 18 
+              8A 00 B1 
+              20 5B 0C 
+              4F 0B A5 
+              1F C1 0B 
+              21 14 5B 
+              1C 7F 1F 
+              B3 0D 15 
+              03 AA 19 
+              4C 1E B3 
+              1D               DCW              1631,9441,4005,5574,2167,2588,1
+057,2512,6263,138,8369,3163,2895,8101,3009,5153,7259,8063,3507,789,6570,7756,76
+03
+  187 0000021A 94 14 D5 
+              13 BD 11 
+              81 1C 2B 
+              18 40 0D 
+              EA 18 58 
+              0F B1 10 
+              00 1E 43 
+              1A 34 1C 
+              D7 00 F6 
+              09 2B 08 
+              D7 20 30 
+              22 C6 25 
+              EF 12 C9 
+              12 23 01 
+              99 1E 13 
+              06               DCW              5268,5077,4541,7297,6187,3392,6
+378,3928,4273,7680,6723,7220,215,2550,2091,8407,8752,9670,4847,4809,291,7833,15
+55
+  188 00000248 5F 16 09 
+              12 3B 13 
+              86 26 A7 
+              0C 1A 0D 
+              18 20 58 
+              1F 32 1F 
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+              37 09 56 
+              22 6B 07 
+              C9 02 10 
+              09 EF 02 
+              9B 1B A7 
+              1C 94 04 
+              AC 06 BD 
+              21 C1 1B 
+              D0 19 3E 
+              20               DCW              5727,4617,4923,9862,3239,3354,8
+216,8024,7986,2359,8790,1899,713,2320,751,7067,7335,1172,1708,8637,7105,6608,82
+54
+  189 00000276 2F 12 7A 
+              25 1F 17 
+              B1 00 F8 
+              06 6B 17 
+              C4 18 DC 
+              0A 70 21 
+              45 17 7E 
+              0F 92 17 
+              5D 19 D2 
+              06 1C 1A 
+              BD 01 AE 
+              13 AE 03 
+              39 06 39 
+              26 3B 03 
+              0C 0F 8A 
+              10               DCW              4655,9594,5919,177,1784,5995,63
+40,2780,8560,5957,3966,6034,6493,1746,6684,445,5038,942,1593,9785,827,3852,4234
+  190 000002A4 D7 10 34 
+              0C 4A 11 
+              E3 21 15 
+              23 02 1B 
+              0E 1C 24 
+              11 F1 0F 
+              FD 20 2D 
+              25 E5 0E 
+              7C 22 ED 
+              25 7A 05 
+              94 24 40 
+              1D FB 23 
+              CB 1F ED 
+              15 2F 02 
+              F4 1C            DCW              4311,3124,4426,8675,8981,6914,7
+182,4388,4081,8445,9517,3813,8828,9709,1402,9364,7488,9211,8139,5613,559,7412
+  191 000002D0 28 1B 9E 
+              18 6E 24 
+              81 0C 04 
+              08 13 16 
+              88 23 A0 
+              25 7C 02 
+              21 24 64 
+              10 B8 07 
+              1A 1D 64 
+              20 07 05 
+              75 1B 26 
+              1E 3E 10 
+              DE 17 E8 
+              1B F4 0C 
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+              E5 1E            DCW              6952,6302,9326,3201,2052,5651,9
+096,9632,636,9249,4196,1976,7450,8292,1287,7029,7718,4158,6110,7144,3316,7909
+  192 000002FC B6 1A 96 
+              11 7C 12 
+              DE 07 1F 
+              07 62 13 
+              FD 00 D2 
+              16 5F 26 
+              07 15 AE 
+              23 0C 1F 
+              4C 0E 96 
+              21 70 11 
+              69 0A BA 
+              04 FB 03 
+              28 0B BA 
+              24 7A 15 
+              88 13            DCW              6838,4502,4732,2014,1823,4962,2
+53,5842,9823,5383,9134,7948,3660,8598,4464,2665,1210,1019,2856,9402,5498,5000
+  193 00000328 8D 1D 0E 
+              0C 43 0A 
+              8A 20 83 
+              09 B8 17 
+              4F 1B            DCW              7565,3086,2627,8330,2435,6072,6
+991
+  194 00000336         ; 100 numbers from 0 to 10000
+  195 00000336         ; sinusoidal shape
+  196 00000336         
+  197 00000336         
+  198 00000336 00 00           ALIGN            4
+  199 00000338         SinTable
+  200 00000338 88 13 BC 
+              14 EE 15 
+              1E 17 4B 
+              18 72 19 
+              94 1A AE 
+              1B C1 1C 
+              CA 1D            DCW              5000, 5308, 5614, 5918, 6219, 6
+514, 6804, 7086, 7361, 7626
+  201 0000034C C8 1E BB 
+              1F A2 20 
+              7C 21 48 
+              22 04 23 
+              B1 23 4E 
+              24 DA 24 
+              54 25            DCW              7880, 8123, 8354, 8572, 8776, 8
+964, 9137, 9294, 9434, 9556
+  202 00000360 BC 25 12 
+              26 55 26 
+              85 26 A2 
+              26 AC 26 
+              A2 26 85 
+              26 55 26 
+              12 26            DCW              9660, 9746, 9813, 9861, 9890, 9
+900, 9890, 9861, 9813, 9746
+  203 00000374 BC 25 54 
+              25 DA 24 
+              4E 24 B1 
+              23 04 23 
+              48 22 7C 
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+              21 A2 20 
+              BB 1F            DCW              9660, 9556, 9434, 9294, 9137, 8
+964, 8776, 8572, 8354, 8123
+  204 00000388 C8 1E CA 
+              1D C1 1C 
+              AE 1B 94 
+              1A 72 19 
+              4B 18 1E 
+              17 EE 15 
+              BC 14            DCW              7880, 7626, 7361, 7086, 6804, 6
+514, 6219, 5918, 5614, 5308
+  205 0000039C 88 13 54 
+              12 22 11 
+              F2 0F C5 
+              0E 9E 0D 
+              7C 0C 62 
+              0B 4F 0A 
+              46 09            DCW              5000, 4692, 4386, 4082, 3781, 3
+486, 3196, 2914, 2639, 2374
+  206 000003B0 48 08 55 
+              07 6E 06 
+              94 05 C8 
+              04 0C 04 
+              5F 03 C2 
+              02 36 02 
+              BC 01            DCW              2120, 1877, 1646, 1428, 1224, 1
+036,  863,  706,  566,  444
+  207 000003C4 54 01 FE 
+              00 BB 00 
+              8B 00 6E 
+              00 64 00 
+              6E 00 8B 
+              00 BB 00 
+              FE 00            DCW              340,  254,  187,  139,  110,  1
+00,  110,  139,  187,  254
+  208 000003D8 54 01 BC 
+              01 36 02 
+              C2 02 5F 
+              03 0C 04 
+              C8 04 94 
+              05 6E 06 
+              55 07            DCW              340,  444,  566,  706,  863, 10
+36, 1224, 1428, 1646, 1877
+  209 000003EC 48 08 46 
+              09 4F 0A 
+              62 0B 7C 
+              0C 9E 0D 
+              C5 0E F2 
+              0F 22 11 
+              54 12            DCW              2120, 2374, 2639, 2914, 3196, 3
+486, 3781, 4082, 4386, 4692
+  210 00000400         
+  211 00000400                 ALIGN                        ; make sure the end
+                                                             of this section is
+                                                             aligned
+  212 00000400                 END                          ; end of file
+              400FE608 
+              40024400 
+              4002451C 
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+              400243FC 
+Command Line: --debug --xref --diag_suppress=9931,A1950W --cpu=Cortex-M4 --fpu=
+SoftVFP --depend=.\lab3.d -o.\lab3.o -I.\RTE\_Lab3 -IC:\Users\ductm\AppData\Loc
+al\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include -IC:\Users\ductm\AppData\Local\
+Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL SETA 1
+" --predefine="__UVISION_VERSION SETA 538" --predefine="_RTE_ SETA 1" --predefi
+ne="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 1" --list=.\lab3.lst Lab3.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DATA 00000000
+
+Symbol: DATA
+   Definitions
+      At line 29 in file Lab3.s
+   Uses
+      None
+Comment: DATA unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 32 in file Lab3.s
+   Uses
+      None
+Comment: .text unused
+Breath_Led 0000005E
+
+Symbol: Breath_Led
+   Definitions
+      At line 82 in file Lab3.s
+   Uses
+      At line 78 in file Lab3.s
+      At line 112 in file Lab3.s
+      At line 120 in file Lab3.s
+      At line 154 in file Lab3.s
+
+Delay 00000128
+
+Symbol: Delay
+   Definitions
+      At line 171 in file Lab3.s
+   Uses
+      At line 90 in file Lab3.s
+      At line 95 in file Lab3.s
+      At line 134 in file Lab3.s
+      At line 139 in file Lab3.s
+      At line 177 in file Lab3.s
+
+EID1 00000000
+
+Symbol: EID1
+   Definitions
+      At line 35 in file Lab3.s
+   Uses
+      At line 34 in file Lab3.s
+Comment: EID1 used once
+EID2 00000009
+
+Symbol: EID2
+   Definitions
+      At line 37 in file Lab3.s
+   Uses
+      At line 36 in file Lab3.s
+Comment: EID2 used once
+Func_BL 00000096
+
+Symbol: Func_BL
+   Definitions
+      At line 102 in file Lab3.s
+   Uses
+      At line 99 in file Lab3.s
+Comment: Func_BL used once
+Increase_TL 00000112
+
+Symbol: Increase_TL
+   Definitions
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 158 in file Lab3.s
+   Uses
+      At line 146 in file Lab3.s
+Comment: Increase_TL used once
+Init 00000122
+
+Symbol: Init
+   Definitions
+      At line 165 in file Lab3.s
+   Uses
+      At line 162 in file Lab3.s
+Comment: Init used once
+Init_BL 000000BE
+
+Symbol: Init_BL
+   Definitions
+      At line 122 in file Lab3.s
+   Uses
+      At line 109 in file Lab3.s
+Comment: Init_BL used once
+PerlinTable 00000136
+
+Symbol: PerlinTable
+   Definitions
+      At line 181 in file Lab3.s
+   Uses
+      None
+Comment: PerlinTable unused
+SinTable 00000338
+
+Symbol: SinTable
+   Definitions
+      At line 199 in file Lab3.s
+   Uses
+      None
+Comment: SinTable unused
+Start 00000014
+
+Symbol: Start
+   Definitions
+      At line 43 in file Lab3.s
+   Uses
+      At line 40 in file Lab3.s
+Comment: Start used once
+Togle_Led 000000C4
+
+Symbol: Togle_Led
+   Definitions
+      At line 126 in file Lab3.s
+   Uses
+      At line 74 in file Lab3.s
+Comment: Togle_Led used once
+Wait_TL 000000F8
+
+Symbol: Wait_TL
+   Definitions
+      At line 144 in file Lab3.s
+   Uses
+      At line 75 in file Lab3.s
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 163 in file Lab3.s
+      At line 167 in file Lab3.s
+
+abs 000000B0
+
+Symbol: abs
+   Definitions
+      At line 114 in file Lab3.s
+   Uses
+      At line 106 in file Lab3.s
+Comment: abs used once
+loop 00000042
+
+Symbol: loop
+   Definitions
+      At line 66 in file Lab3.s
+   Uses
+      At line 80 in file Lab3.s
+      At line 100 in file Lab3.s
+      At line 124 in file Lab3.s
+      At line 142 in file Lab3.s
+      At line 156 in file Lab3.s
+
+16 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIO_PORTE_DATA_R 400243FC
+
+Symbol: GPIO_PORTE_DATA_R
+   Definitions
+      At line 22 in file Lab3.s
+   Uses
+      At line 61 in file Lab3.s
+Comment: GPIO_PORTE_DATA_R used once
+GPIO_PORTE_DEN_R 4002451C
+
+Symbol: GPIO_PORTE_DEN_R
+   Definitions
+      At line 24 in file Lab3.s
+   Uses
+      At line 57 in file Lab3.s
+Comment: GPIO_PORTE_DEN_R used once
+GPIO_PORTE_DIR_R 40024400
+
+Symbol: GPIO_PORTE_DIR_R
+   Definitions
+      At line 23 in file Lab3.s
+   Uses
+      At line 53 in file Lab3.s
+Comment: GPIO_PORTE_DIR_R used once
+SYSCTL_RCGCGPIO_R 400FE608
+
+Symbol: SYSCTL_RCGCGPIO_R
+   Definitions
+      At line 25 in file Lab3.s
+   Uses
+      At line 49 in file Lab3.s
+Comment: SYSCTL_RCGCGPIO_R used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+TExaS_Init 00000000
+
+Symbol: TExaS_Init
+   Definitions
+      At line 27 in file Lab3.s
+   Uses
+      At line 46 in file Lab3.s
+Comment: TExaS_Init used once
+1 symbol
+358 symbols in table
