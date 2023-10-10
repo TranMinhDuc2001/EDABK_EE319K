@@ -14,14 +14,14 @@
 #include "../inc/dac.h"
 #include "../inc/tm4c123gh6pm.h"
 
-const uint8_t SineWave[126] = {32,38,38,44,45,50,50,51,52,53,54,55,55,56,57,58,58,58,59,59,60,60,60,61,61,61,62,62,62,63,63,63,
-															 63,63,63,62,62,62,61,61,61,60,60,60,59,59,58,58,58,57,56,55,55,54,53,52,51,50,50,45,44,38,38,32,
-															 32,26,26,22,21,16,16,15,14,13,12,11,11,10,9,8,8,8,7,7,6,6,6,4,4,2,2,2,1,1,1,
-															 1,1,1,2,2,2,4,4,6,6,6,7,7,8,8,8,9,10,11,11,12,13,14,15,16,16,21,22,26,26,32};
-	
-	
-	
-																//32,32,31,31,31,30,30,30,29,29,28,28,28,27,27,26,26,26,25,24,23,23,22,21,20,19,19,14,9,4,1,
+const uint8_t SineWave[128] = {31,33,34,36,37,39,40,42,43,45,46,48,49,50,51,53,54,55,56,57,
+															 58,59,59,60,61,61,62,62,62,63,63,63,63,63,63,63,62,62,61,61,
+															 60,60,59,58,57,56,55,54,53,52,51,50,48,47,45,44,43,41,40,38,
+															 36,35,33,32,30,29,27,25,24,22,21,19,18,17,15,14,12,11,10,9,
+															 8,7,6,5,4,3,2,2,2,1,1,1,0,0,0,0,0,0,0,
+															 1,1,1,2,2,3,3,4,5,6,7,8,9,11,12,13,14,16,17,19,
+															 20,22,23,25,26,28,29,30,31};
+															 
 uint8_t Index=0;           // Index varies from 0 to 15
 // **************Sound_Init*********************
 // Initialize digital outputs and SysTick timer
@@ -29,13 +29,8 @@ uint8_t Index=0;           // Index varies from 0 to 15
 // Input: none
 // Output: none
 void Sound_Init(void){
-  uint32_t volatile delay;
 	
 	DAC_Init();
-
-  SYSCTL_RCGCGPIO_R |= 0x00000002; // activate port B
-
-  delay = SYSCTL_RCGCGPIO_R;
 
   GPIO_PORTB_DIR_R |= 0x20;     // make PB5 out
 
@@ -45,7 +40,7 @@ void Sound_Init(void){
 
   NVIC_ST_CTRL_R = 0;           // disable SysTick during setup
 
-  NVIC_ST_RELOAD_R = 39999;     // reload value for 500us (assuming 80MHz)
+  NVIC_ST_RELOAD_R = 124;     // reload value for 500us (assuming 40MHz)
 
   NVIC_ST_CURRENT_R = 0;        // any write to current clears it
 
@@ -71,7 +66,11 @@ void Sound_Start(uint32_t period){
 	
 	DAC_Init();
 	
-	Index = 0;
+	GPIO_PORTB_DIR_R |= 0x20;     // make PB5 out
+
+  GPIO_PORTB_DR8R_R |= 0x20;    // can drive up to 8mA out
+
+  GPIO_PORTB_DEN_R |= 0x20;     // enable digital I/O on PB5
 
   NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
 
@@ -79,7 +78,7 @@ void Sound_Start(uint32_t period){
 
   NVIC_ST_CURRENT_R = 0;      // any write to current clears it
 
-  NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R&0x00FFFFFF)|0x20000000; // priority 1
+  NVIC_SYS_PRI3_R = NVIC_SYS_PRI3_R&0x00FFFFFF; // priority 0  
 
   NVIC_ST_CTRL_R = 0x0007; // enable SysTick with core clock and interrupts
 }
@@ -119,9 +118,8 @@ const uint8_t *Sound_GetVoice(void){
 // Interrupt service routine
 // Executed every 12.5ns*(period)
 void SysTick_Handler(void){
-
 	
-	Index = (Index+1)%126;
+	Index = (Index+1)% 128;
 
   DAC_Out(SineWave[Index]);
 }

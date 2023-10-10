@@ -124,7 +124,6 @@ Section Cross References
     sound.o(.text.Sound_Init) refers to dac.o(.text.DAC_Init) for DAC_Init
     sound.o(.ARM.exidx.text.Sound_Init) refers to sound.o(.text.Sound_Init) for [Anonymous Symbol]
     sound.o(.text.Sound_Start) refers to dac.o(.text.DAC_Init) for DAC_Init
-    sound.o(.text.Sound_Start) refers to sound.o(.bss.Index) for Index
     sound.o(.ARM.exidx.text.Sound_Start) refers to sound.o(.text.Sound_Start) for [Anonymous Symbol]
     sound.o(.ARM.exidx.text.Sound_Voice) refers to sound.o(.text.Sound_Voice) for [Anonymous Symbol]
     sound.o(.ARM.exidx.text.Sound_Off) refers to sound.o(.text.Sound_Off) for [Anonymous Symbol]
@@ -138,7 +137,6 @@ Section Cross References
     key.o(.ARM.exidx.text.LaunchPad_Init) refers to key.o(.text.LaunchPad_Init) for [Anonymous Symbol]
     key.o(.ARM.exidx.text.LaunchPad_Input) refers to key.o(.text.LaunchPad_Input) for [Anonymous Symbol]
     key.o(.ARM.exidx.text.LaunchPad_Output) refers to key.o(.text.LaunchPad_Output) for [Anonymous Symbol]
-    lab6.o(.text.voltmetermain) refers to startup.o(.text) for DisableInterrupts
     lab6.o(.text.voltmetermain) refers to lab6grader.o(.text.TExaS_Init) for TExaS_Init
     lab6.o(.text.voltmetermain) refers to key.o(.text.LaunchPad_Init) for LaunchPad_Init
     lab6.o(.text.voltmetermain) refers to dac.o(.text.DAC_Init) for DAC_Init
@@ -149,7 +147,6 @@ Section Cross References
     lab6.o(.text.staticmain) refers to lab6grader.o(.text.TExaS_Init) for TExaS_Init
     lab6.o(.text.staticmain) refers to key.o(.text.LaunchPad_Init) for LaunchPad_Init
     lab6.o(.text.staticmain) refers to dac.o(.text.DAC_Init) for DAC_Init
-    lab6.o(.text.staticmain) refers to startup.o(.text) for EnableInterrupts
     lab6.o(.text.staticmain) refers to key.o(.text.LaunchPad_Input) for LaunchPad_Input
     lab6.o(.text.staticmain) refers to lab6.o(.rodata.Inputs) for Inputs
     lab6.o(.text.staticmain) refers to lab6.o(.bss.Testdata) for Testdata
@@ -158,8 +155,8 @@ Section Cross References
     lab6.o(.text.main) refers to lab6grader.o(.text.TExaS_Init) for TExaS_Init
     lab6.o(.text.main) refers to key.o(.text.Key_Init) for Key_Init
     lab6.o(.text.main) refers to sound.o(.text.Sound_Init) for Sound_Init
-    lab6.o(.text.main) refers to sound.o(.text.Sound_Start) for Sound_Start
     lab6.o(.text.main) refers to key.o(.text.Key_In) for Key_In
+    lab6.o(.text.main) refers to sound.o(.text.Sound_Start) for Sound_Start
     lab6.o(.ARM.exidx.text.main) refers to lab6.o(.text.main) for [Anonymous Symbol]
     song.o(.ARM.exidx.text.Song_Init) refers to song.o(.text.Song_Init) for [Anonymous Symbol]
     song.o(.ARM.exidx.text.Song_Play) refers to song.o(.text.Song_Play) for [Anonymous Symbol]
@@ -364,9 +361,9 @@ Removing Unused input sections from the image.
     Removing key.o(.text.LaunchPad_Output), (2 bytes).
     Removing key.o(.ARM.exidx.text.LaunchPad_Output), (8 bytes).
     Removing lab6.o(.text), (0 bytes).
-    Removing lab6.o(.text.voltmetermain), (58 bytes).
+    Removing lab6.o(.text.voltmetermain), (50 bytes).
     Removing lab6.o(.ARM.exidx.text.voltmetermain), (8 bytes).
-    Removing lab6.o(.text.staticmain), (114 bytes).
+    Removing lab6.o(.text.staticmain), (110 bytes).
     Removing lab6.o(.ARM.exidx.text.staticmain), (8 bytes).
     Removing lab6.o(.ARM.exidx.text.main), (8 bytes).
     Removing lab6.o(.rodata.Inputs), (64 bytes).
@@ -415,7 +412,7 @@ Removing Unused input sections from the image.
     Removing timer3a.o(.ARM.exidx.text.Timer3A_Handler), (8 bytes).
     Removing timer3a.o(.ARM.exidx.text.Timer3A_Stop), (8 bytes).
 
-118 unused section(s) (total 17544 bytes) removed from the image.
+118 unused section(s) (total 17532 bytes) removed from the image.
 
 ==============================================================================
 
@@ -562,25 +559,25 @@ Image Symbol Table
     [Anonymous Symbol]                       0x000010bc   Section        0  lab6grader.o(.text.LogicAnalyzerE)
     [Anonymous Symbol]                       0x000010d8   Section        0  lab6grader.o(.text.Scope)
     [Anonymous Symbol]                       0x000010f0   Section        0  sound.o(.text.Sound_Init)
-    [Anonymous Symbol]                       0x0000115c   Section        0  sound.o(.text.Sound_Start)
-    [Anonymous Symbol]                       0x00001194   Section        0  sound.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x000011c8   Section        0  lab6grader.o(.text.TExaS_Init)
-    [Anonymous Symbol]                       0x0000181c   Section        0  wave.o(.text.Timer2A_Handler)
-    [Anonymous Symbol]                       0x0000182c   Section        0  timer3a.o(.text.Timer3A_Handler)
-    [Anonymous Symbol]                       0x00001844   Section        0  timer3a.o(.text.Timer3A_Init)
-    [Anonymous Symbol]                       0x000018b8   Section        0  timer3a.o(.text.Timer3A_Stop)
-    [Anonymous Symbol]                       0x000018d4   Section        0  lab6grader.o(.text.Timer5A_Handler)
-    [Anonymous Symbol]                       0x000018ec   Section        0  lab6.o(.text.main)
-    i.PLL_Init                               0x0000194c   Section        0  pll.o(i.PLL_Init)
-    .L.str.5                                 0x00001e68   Data          16  lab6grader.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x00001e68   Section        0  lab6grader.o(.rodata.str1.1)
-    .L.str.16                                0x00001e78   Data          44  lab6grader.o(.rodata.str1.1)
-    .L.str.1                                 0x00001ea4   Data          26  lab6grader.o(.rodata.str1.1)
-    .L.str.4                                 0x00001ebe   Data          50  lab6grader.o(.rodata.str1.1)
-    .L.str.12                                0x00001ef0   Data          21  lab6grader.o(.rodata.str1.1)
-    .L.str.13                                0x00001f05   Data           7  lab6grader.o(.rodata.str1.1)
-    .L.str.14                                0x00001f0c   Data           6  lab6grader.o(.rodata.str1.1)
-    .L.str.15                                0x00001f12   Data           8  lab6grader.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x00001144   Section        0  sound.o(.text.Sound_Start)
+    [Anonymous Symbol]                       0x00001198   Section        0  sound.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x000011b8   Section        0  lab6grader.o(.text.TExaS_Init)
+    [Anonymous Symbol]                       0x0000180c   Section        0  wave.o(.text.Timer2A_Handler)
+    [Anonymous Symbol]                       0x0000181c   Section        0  timer3a.o(.text.Timer3A_Handler)
+    [Anonymous Symbol]                       0x00001834   Section        0  timer3a.o(.text.Timer3A_Init)
+    [Anonymous Symbol]                       0x000018a8   Section        0  timer3a.o(.text.Timer3A_Stop)
+    [Anonymous Symbol]                       0x000018c4   Section        0  lab6grader.o(.text.Timer5A_Handler)
+    [Anonymous Symbol]                       0x000018dc   Section        0  lab6.o(.text.main)
+    i.PLL_Init                               0x00001934   Section        0  pll.o(i.PLL_Init)
+    .L.str.5                                 0x00001e50   Data          16  lab6grader.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x00001e50   Section        0  lab6grader.o(.rodata.str1.1)
+    .L.str.16                                0x00001e60   Data          44  lab6grader.o(.rodata.str1.1)
+    .L.str.1                                 0x00001e8c   Data          26  lab6grader.o(.rodata.str1.1)
+    .L.str.4                                 0x00001ea6   Data          50  lab6grader.o(.rodata.str1.1)
+    .L.str.12                                0x00001ed8   Data          21  lab6grader.o(.rodata.str1.1)
+    .L.str.13                                0x00001eed   Data           7  lab6grader.o(.rodata.str1.1)
+    .L.str.14                                0x00001ef4   Data           6  lab6grader.o(.rodata.str1.1)
+    .L.str.15                                0x00001efa   Data           8  lab6grader.o(.rodata.str1.1)
     .data                                    0x20000000   Section       16  uart.o(.data)
     RxFifo                                   0x20000028   Data          64  uart.o(.bss)
     .bss                                     0x20000028   Section      128  uart.o(.bss)
@@ -854,26 +851,26 @@ Image Symbol Table
     LogicAnalyzerC                           0x000010a1   Thumb Code    28  lab6grader.o(.text.LogicAnalyzerC)
     LogicAnalyzerE                           0x000010bd   Thumb Code    26  lab6grader.o(.text.LogicAnalyzerE)
     Scope                                    0x000010d9   Thumb Code    24  lab6grader.o(.text.Scope)
-    Sound_Init                               0x000010f1   Thumb Code   108  sound.o(.text.Sound_Init)
-    Sound_Start                              0x0000115d   Thumb Code    56  sound.o(.text.Sound_Start)
-    SysTick_Handler                          0x00001195   Thumb Code    50  sound.o(.text.SysTick_Handler)
-    TExaS_Init                               0x000011c9   Thumb Code  1592  lab6grader.o(.text.TExaS_Init)
-    Timer2A_Handler                          0x0000181d   Thumb Code    14  wave.o(.text.Timer2A_Handler)
-    Timer3A_Handler                          0x0000182d   Thumb Code    24  timer3a.o(.text.Timer3A_Handler)
-    Timer3A_Init                             0x00001845   Thumb Code   114  timer3a.o(.text.Timer3A_Init)
-    Timer3A_Stop                             0x000018b9   Thumb Code    26  timer3a.o(.text.Timer3A_Stop)
-    Timer5A_Handler                          0x000018d5   Thumb Code    24  lab6grader.o(.text.Timer5A_Handler)
-    main                                     0x000018ed   Thumb Code    64  lab6.o(.text.main)
-    PLL_Init                                 0x0000194d   Thumb Code   120  pll.o(i.PLL_Init)
-    IMULTIPLIERS                             0x000019c8   Data          32  lab6grader.o(.rodata.IMULTIPLIERS)
-    NotesPeriod                              0x000019e8   Data         128  lab6grader.o(.rodata.NotesPeriod)
-    NotesProblem                             0x00001a68   Data         640  lab6grader.o(.rodata.NotesProblem)
-    PortProblem                              0x00001ce8   Data         160  lab6grader.o(.rodata.PortProblem)
-    RMULTIPLIERS                             0x00001d88   Data          32  lab6grader.o(.rodata.RMULTIPLIERS)
-    SineWave                                 0x00001da8   Data         126  sound.o(.rodata.SineWave)
-    ports                                    0x00001e28   Data          64  lab6grader.o(.rodata.ports)
-    Region$$Table$$Base                      0x00001f1c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00001f3c   Number         0  anon$$obj.o(Region$$Table)
+    Sound_Init                               0x000010f1   Thumb Code    82  sound.o(.text.Sound_Init)
+    Sound_Start                              0x00001145   Thumb Code    84  sound.o(.text.Sound_Start)
+    SysTick_Handler                          0x00001199   Thumb Code    32  sound.o(.text.SysTick_Handler)
+    TExaS_Init                               0x000011b9   Thumb Code  1592  lab6grader.o(.text.TExaS_Init)
+    Timer2A_Handler                          0x0000180d   Thumb Code    14  wave.o(.text.Timer2A_Handler)
+    Timer3A_Handler                          0x0000181d   Thumb Code    24  timer3a.o(.text.Timer3A_Handler)
+    Timer3A_Init                             0x00001835   Thumb Code   114  timer3a.o(.text.Timer3A_Init)
+    Timer3A_Stop                             0x000018a9   Thumb Code    26  timer3a.o(.text.Timer3A_Stop)
+    Timer5A_Handler                          0x000018c5   Thumb Code    24  lab6grader.o(.text.Timer5A_Handler)
+    main                                     0x000018dd   Thumb Code    56  lab6.o(.text.main)
+    PLL_Init                                 0x00001935   Thumb Code   120  pll.o(i.PLL_Init)
+    IMULTIPLIERS                             0x000019b0   Data          32  lab6grader.o(.rodata.IMULTIPLIERS)
+    NotesPeriod                              0x000019d0   Data         128  lab6grader.o(.rodata.NotesPeriod)
+    NotesProblem                             0x00001a50   Data         640  lab6grader.o(.rodata.NotesProblem)
+    PortProblem                              0x00001cd0   Data         160  lab6grader.o(.rodata.PortProblem)
+    RMULTIPLIERS                             0x00001d70   Data          32  lab6grader.o(.rodata.RMULTIPLIERS)
+    SineWave                                 0x00001d90   Data         128  sound.o(.rodata.SineWave)
+    ports                                    0x00001e10   Data          64  lab6grader.o(.rodata.ports)
+    Region$$Table$$Base                      0x00001f04   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00001f24   Number         0  anon$$obj.o(Region$$Table)
     RxPutI                                   0x20000000   Data           4  uart.o(.data)
     RxGetI                                   0x20000004   Data           4  uart.o(.data)
     TxPutI                                   0x20000008   Data           4  uart.o(.data)
@@ -902,9 +899,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00001f60, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00001f48, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00001f3c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00001f24, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -985,44 +982,43 @@ Memory Map of the image
     0x000010bc   0x000010bc   0x0000001a   Code   RO           21    .text.LogicAnalyzerE  lab6grader.o
     0x000010d6   0x000010d6   0x00000002   PAD
     0x000010d8   0x000010d8   0x00000018   Code   RO           13    .text.Scope         lab6grader.o
-    0x000010f0   0x000010f0   0x0000006c   Code   RO           99    .text.Sound_Init    sound.o
-    0x0000115c   0x0000115c   0x00000038   Code   RO          101    .text.Sound_Start   sound.o
-    0x00001194   0x00001194   0x00000032   Code   RO          109    .text.SysTick_Handler  sound.o
-    0x000011c6   0x000011c6   0x00000002   PAD
-    0x000011c8   0x000011c8   0x00000654   Code   RO           65    .text.TExaS_Init    lab6grader.o
-    0x0000181c   0x0000181c   0x0000000e   Code   RO          179    .text.Timer2A_Handler  wave.o
-    0x0000182a   0x0000182a   0x00000002   PAD
-    0x0000182c   0x0000182c   0x00000018   Code   RO          220    .text.Timer3A_Handler  timer3a.o
-    0x00001844   0x00001844   0x00000072   Code   RO          218    .text.Timer3A_Init  timer3a.o
-    0x000018b6   0x000018b6   0x00000002   PAD
-    0x000018b8   0x000018b8   0x0000001a   Code   RO          222    .text.Timer3A_Stop  timer3a.o
-    0x000018d2   0x000018d2   0x00000002   PAD
-    0x000018d4   0x000018d4   0x00000018   Code   RO           25    .text.Timer5A_Handler  lab6grader.o
-    0x000018ec   0x000018ec   0x00000060   Code   RO          143    .text.main          lab6.o
-    0x0000194c   0x0000194c   0x0000007c   Code   RO          261    i.PLL_Init          pll.o
-    0x000019c8   0x000019c8   0x00000020   Data   RO           84    .rodata.IMULTIPLIERS  lab6grader.o
-    0x000019e8   0x000019e8   0x00000080   Data   RO           73    .rodata.NotesPeriod  lab6grader.o
-    0x00001a68   0x00001a68   0x00000280   Data   RO           72    .rodata.NotesProblem  lab6grader.o
-    0x00001ce8   0x00001ce8   0x000000a0   Data   RO           71    .rodata.PortProblem  lab6grader.o
-    0x00001d88   0x00001d88   0x00000020   Data   RO           83    .rodata.RMULTIPLIERS  lab6grader.o
-    0x00001da8   0x00001da8   0x0000007e   Data   RO          111    .rodata.SineWave    sound.o
-    0x00001e26   0x00001e26   0x00000002   PAD
-    0x00001e28   0x00001e28   0x00000040   Data   RO           70    .rodata.ports       lab6grader.o
-    0x00001e68   0x00001e68   0x000000b2   Data   RO           77    .rodata.str1.1      lab6grader.o
-    0x00001f1a   0x00001f1a   0x00000002   PAD
-    0x00001f1c   0x00001f1c   0x00000020   Data   RO          449    Region$$Table       anon$$obj.o
+    0x000010f0   0x000010f0   0x00000052   Code   RO           99    .text.Sound_Init    sound.o
+    0x00001142   0x00001142   0x00000002   PAD
+    0x00001144   0x00001144   0x00000054   Code   RO          101    .text.Sound_Start   sound.o
+    0x00001198   0x00001198   0x00000020   Code   RO          109    .text.SysTick_Handler  sound.o
+    0x000011b8   0x000011b8   0x00000654   Code   RO           65    .text.TExaS_Init    lab6grader.o
+    0x0000180c   0x0000180c   0x0000000e   Code   RO          179    .text.Timer2A_Handler  wave.o
+    0x0000181a   0x0000181a   0x00000002   PAD
+    0x0000181c   0x0000181c   0x00000018   Code   RO          220    .text.Timer3A_Handler  timer3a.o
+    0x00001834   0x00001834   0x00000072   Code   RO          218    .text.Timer3A_Init  timer3a.o
+    0x000018a6   0x000018a6   0x00000002   PAD
+    0x000018a8   0x000018a8   0x0000001a   Code   RO          222    .text.Timer3A_Stop  timer3a.o
+    0x000018c2   0x000018c2   0x00000002   PAD
+    0x000018c4   0x000018c4   0x00000018   Code   RO           25    .text.Timer5A_Handler  lab6grader.o
+    0x000018dc   0x000018dc   0x00000058   Code   RO          143    .text.main          lab6.o
+    0x00001934   0x00001934   0x0000007c   Code   RO          261    i.PLL_Init          pll.o
+    0x000019b0   0x000019b0   0x00000020   Data   RO           84    .rodata.IMULTIPLIERS  lab6grader.o
+    0x000019d0   0x000019d0   0x00000080   Data   RO           73    .rodata.NotesPeriod  lab6grader.o
+    0x00001a50   0x00001a50   0x00000280   Data   RO           72    .rodata.NotesProblem  lab6grader.o
+    0x00001cd0   0x00001cd0   0x000000a0   Data   RO           71    .rodata.PortProblem  lab6grader.o
+    0x00001d70   0x00001d70   0x00000020   Data   RO           83    .rodata.RMULTIPLIERS  lab6grader.o
+    0x00001d90   0x00001d90   0x00000080   Data   RO          111    .rodata.SineWave    sound.o
+    0x00001e10   0x00001e10   0x00000040   Data   RO           70    .rodata.ports       lab6grader.o
+    0x00001e50   0x00001e50   0x000000b2   Data   RO           77    .rodata.str1.1      lab6grader.o
+    0x00001f02   0x00001f02   0x00000002   PAD
+    0x00001f04   0x00001f04   0x00000020   Data   RO          449    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00001f3c, Size: 0x00000024, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x20000000, Load base: 0x00001f24, Size: 0x00000024, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00001f3c   0x00000010   Data   RW          234    .data               uart.o
-    0x20000010   0x00001f4c   0x00000009   Data   RW          145    .data.EID1          lab6.o
-    0x20000019   0x00001f55   0x00000009   Data   RW          146    .data.EID2          lab6.o
+    0x20000000   0x00001f24   0x00000010   Data   RW          234    .data               uart.o
+    0x20000010   0x00001f34   0x00000009   Data   RW          145    .data.EID1          lab6.o
+    0x20000019   0x00001f3d   0x00000009   Data   RW          146    .data.EID2          lab6.o
 
 
-    Execution Region ER_ZI (Exec base: 0x20000028, Load base: 0x00001f60, Size: 0x00000558, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x20000028, Load base: 0x00001f48, Size: 0x00000558, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1030,7 +1026,7 @@ Memory Map of the image
     0x200000a8        -       0x00000060   Zero   RW          314    .bss                c_w.l(libspace.o)
     0x20000108        -       0x00000001   Zero   RW           76    .bss.Fail           lab6grader.o
     0x20000109        -       0x00000001   Zero   RW          112    .bss.Index          sound.o
-    0x2000010a   0x00001f60   0x00000002   PAD
+    0x2000010a   0x00001f48   0x00000002   PAD
     0x2000010c        -       0x00000004   Zero   RW           82    .bss.Last16ADCindex  lab6grader.o
     0x20000110        -       0x00000040   Zero   RW           85    .bss.Last16ADCresults  lab6grader.o
     0x20000150        -       0x00000004   Zero   RW           90    .bss.LastIn         lab6grader.o
@@ -1058,19 +1054,19 @@ Image component sizes
 
         66          0          0          0          0        654   dac.o
         66          0          0          0          0       1061   key.o
-        96         32          0         18          0       1694   lab6.o
+        88         32          0         18          0       1686   lab6.o
       3698        298       1234          0        113      14249   lab6grader.o
        124          4          0          0          0        467   pll.o
-       214          0        126          0          1       1463   sound.o
+       198          0        128          0          1       1427   sound.o
        692        632          0          0       1024        956   startup.o
        164          0          0          0          4       1033   timer3a.o
       1082         48          0         16        128       9932   uart.o
         14          0          0          0          0       2267   wave.o
 
     ----------------------------------------------------------------------
-      6234       1014       1396         36       1272      33776   Object Totals
+      6210       1014       1396         36       1272      33732   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        18          0          4          2          2          0   (incl. Padding)
+        18          0          2          2          2          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1118,15 +1114,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      6600       1030       1396         36       1368      34052   Grand Totals
-      6600       1030       1396         36       1368      34052   ELF Image Totals
-      6600       1030       1396         36          0          0   ROM Totals
+      6576       1030       1396         36       1368      34008   Grand Totals
+      6576       1030       1396         36       1368      34008   ELF Image Totals
+      6576       1030       1396         36          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 7996 (   7.81kB)
+    Total RO  Size (Code + RO Data)                 7972 (   7.79kB)
     Total RW  Size (RW Data + ZI Data)              1404 (   1.37kB)
-    Total ROM Size (Code + RO Data + RW Data)       8032 (   7.84kB)
+    Total ROM Size (Code + RO Data + RW Data)       8008 (   7.82kB)
 
 ==============================================================================
 
