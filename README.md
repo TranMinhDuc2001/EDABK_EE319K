@@ -23,3 +23,7 @@
 - Design a device driver for your DAC <br>
 - Interface a four switches to act as synthesizer keys <br>
 - Implement a synthesizer with four notes with the switches and device driver <br>
+### Note
+- if we call TExaS_Init(SIMULATIONGRADER) so the pulse of the microprocessor is 80MHz is mean 1 bit will have 12.5ns to run.
+  But this lab i have 128 values on SinWave so if you want caculate audio frequency, you must multiply the audio frequency with 128 then calculate the period
+- period = (1/f * 80Mhz) - 1, f mean audio frequency
